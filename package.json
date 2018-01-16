@@ -12,6 +12,7 @@
   "dependencies": {
     "ejs": "^2.5.7",
     "express": "^4.16.2",
-    "moongoose": "0.0.5"
+    "body-parser": "^1.14.1",
+    "mongoose": "^4.1.12"
   }
 }
