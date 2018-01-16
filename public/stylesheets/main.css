@@ -80,3 +80,7 @@ input:focus{
 .fa-plus {
 	float: right;
 }
+
+.name {
+	background: none;
+}
