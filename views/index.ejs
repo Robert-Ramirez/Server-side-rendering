@@ -1,0 +1,28 @@
+<% include partials/header %>
+ <div class="container">
+     <header class="jumbotron">
+         <div class="container">
+             <h1>Welcome To Task Manager!</h1>
+             <p>View your hand-picked tasks for today</p>
+             <p>
+                <a class="btn btn-primary btn-large" href="/index/new">Add a New Task</a>
+             </p>
+         </div>
+     </header>
+ 
+      <div class="row text-center" style="display:flex; flex-wrap: wrap;">
+        <% tasklists.forEach(function(tasklists){ %>
+            <div class="col-md-3 col-sm-6">
+                <div class="thumbnail">
+                   <div class="caption">
+                       <h4><%= tasklists.name %></h4>
+                   </div>
+                   <p>
+                       <a href="/index/<%= tasklists._id %>" class="btn btn-primary">More Info</a>
+                   </p>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+     
+<% include partials/footer %>
