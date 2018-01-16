@@ -1,5 +1,15 @@
 <% include partials/header %>
+
+<!--RETRIEVE THE TASK NAME FROM THE DATABASE IMPORTANT TO WRITE NAME CORRECTLY-->
 <h1><%= tasklists.name %></h1>
 
+<!--RETRIEVE THE TASK DESCRIPTION FROM THE DATABASE IMPORTANT TO WRITE NAME CORRECTLY-->
 <p><%= tasklists.description %></p>
+
+<% tasklists.comments.forEach(function(comment){ %>
+    <p>
+        <strong><%= comment.author %></strong> - <%= comment.text %>
+    </p>
+<% }) %>
+
 <% include partials/footer %>

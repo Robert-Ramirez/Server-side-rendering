@@ -1,7 +1,9 @@
-var express  = require("express"),
-    app      = express(),
-    bodyParser = require("body-parser"),
-    mongoose = require("mongoose");
+var express     = require("express"),
+    app         = express(),
+    bodyParser  = require("body-parser"),
+    mongoose    = require("mongoose"),
+    Tasklists   = require("./models/tasklists"),
+    seedDB      = require("./seeds")
     
 mongoose.Promise = global.Promise;
 
@@ -11,30 +13,11 @@ mongoose.connect(url,{useMongoClient: true});
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
+seedDB();
 
-// SCHEMA SETUP
-var tasklistSchema = new mongoose.Schema({
-   name: String,
-   description: String
-});
+//ROUTERS 
 
-var tasklists = mongoose.model("tasklists", tasklistSchema);
-
-// tasklists.create(
-//      {
-//          name: "Study", 
-//          description: "Learn programming!"
-         
-//      },
-//      function(err, campground){
-//       if(err){
-//           console.log(err);
-//       } else {
-//           console.log("NEWLY CREATED CAMPGROUND: ");
-//           console.log(campground);
-//       }
-//     });
-    
+//HOME PAGE - DISPLAYS HTML
 app.get("/", function(req, res){
     res.render("home");
 });
@@ -47,53 +30,57 @@ app.get("/", function(req, res){
 //     res.render("index", {tasklists:tasklists});
 // });
 
-//INDEX - show all tasklist
+//INDEX PAGE - SHOWS ALL TASKLIST
 app.get("/index", function(req, res){
-    // Get all campgrounds from DB
-    tasklists.find({}, function(err, allTasklists){
+    // RETRIEVE TASK FROM DATABASE
+    //FUNCTION IS FOR ITERATING THROUGH ALL TASK IN DATABASE
+    Tasklists.find({}, function(err, allTasklists){
       if(err){
           console.log(err);
       } else {
+          //REREOUTE TO INDEX PAGE AFTER ITERATING THROUGH ALL TASK IN DATABASE
           res.render("index",{tasklists:allTasklists});
       }
     });
 });
 
-//CREATE - add new campground to DB
+//CREATE - ADD NEW USER INPUT TO DATABASE
 app.post("/index", function(req, res){
-    // get data from form and add to campgrounds array
+    // RETRIEVE DATA FROM USER INPUT IN NEW PAGE AND CREATE AN ARRAY TO PREPARE FOR DATABASE ENTRY
     var name = req.body.name;
     var desc = req.body.description;
     var newTasklist = {name: name, description: desc}
-    // Create a new campground and save to DB
-    tasklists.create(newTasklist, function(err, newlyCreated){
+    // CREATES A NEW TASK LIST ENTRY AND SAVES TO THE DATABASE
+    Tasklists.create(newTasklist, function(err, newlyCreated){
         if(err){
             console.log(err);
         } else {
-            //redirect back to campgrounds page
+            //REREOUTES TO THE INDEX PAGE
             res.redirect("/index");
         }
     });
 });
 
-//NEW - show form to create new tasklist
+//NEW PAGE - DISPLAY HTML
 app.get("/index/new", function(req, res){
-   res.render("new.ejs"); 
+   res.render("new"); 
 });   
 
-// SHOW - shows more info about one campground
+// SHOW PAGE - DISPLAYS DESCRIPTION FROM DATABASE IN NEW PAGE
 app.get("/index/:id", function(req, res){
-    //find the campground with provided ID
-    tasklists.findById(req.params.id, function(err, foundTask){
+    //FINDS THE TASK IN DATABASE WITH A PROVIDED ID
+    Tasklists.findById(req.params.id).populate("comments").exec(function(err, foundTask){
         if(err){
             console.log(err);
         } else {
-            //render show template with that campground
+            //REROUTES BAKE TO SHOW PAGE AFTER ITERATING THROUGH THE DATABASE/ARRY FOR THE TASK USING ID
             res.render("show", {tasklists: foundTask});
         }
     });
 })
 
+
+    //RUN THE SERVER
     app.listen(process.env.PORT, process.env.IP, function(){
    console.log("The Server Has Started!");
 });
