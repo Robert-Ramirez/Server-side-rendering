@@ -4,7 +4,9 @@ var express  = require("express"),
     mongoose = require("mongoose");
     
 mongoose.Promise = global.Promise;
-mongoose.connect("mongodb://localhost/todo",{useMongoClient: true});    
+
+mongoose.connect(process.env.DATABASEURL,{useMongoClient: true}); 
+// mongodb://rob:new3@ds255767.mlab.com:55767/todo23
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
