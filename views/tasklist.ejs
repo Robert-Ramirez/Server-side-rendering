@@ -4,25 +4,15 @@
         
         <header class = "jumbotron">
             <div>
-                <h1>Welcome to ToDo!</h1>
-                <p>View our hand-picked tasklist from all over the world</p>
+                <h1>Welcome to Task Manager!</h1>
+                <p>View all your hand-picked tasks for the today</p>
                 <p>
-                    <a class = "btn btn-primary btn-lg" href = "/tasklist/new">Add New Campground</a>
+                    <a class = "btn btn-primary btn-lg" href = "/tasklist/new">Add New Task</a>
                 </p>
             </div>
         </header>
         
         <div class = "row text-center" style = "display:flex; flex-wrap: wrap;">
-            <% tasklist.forEach(function(campground){ %>
-                 <div class = "col-md-3 col-sm-6">
-                     <div class = "thumbnail">
-                         <img src = " <%= campground.image %> ">
-                         <div class ="caption">
-                            <h4> <%= campground.name %> </h4> 
-                         </div>
-                     </div>
-                 </div>
-            <% }); %>
         </div>
     </div>
 <% include partials/footer %>
