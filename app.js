@@ -3,7 +3,8 @@ var express     = require("express"),
     bodyParser  = require("body-parser"),
     mongoose    = require("mongoose"),
     Tasklists   = require("./models/tasklists"),
-    seedDB      = require("./seeds")
+    Comment     = require("./models/comments"),
+    seedDB      = require("./seeds");
     
 mongoose.Promise = global.Promise;
 
@@ -31,21 +32,21 @@ app.get("/", function(req, res){
 // });
 
 //INDEX PAGE - SHOWS ALL TASKLIST
-app.get("/index", function(req, res){
+app.get("/tasklists", function(req, res){
     // RETRIEVE TASK FROM DATABASE
     //FUNCTION IS FOR ITERATING THROUGH ALL TASK IN DATABASE
-    Tasklists.find({}, function(err, allTasklists){
+    Tasklists.find({}, function(err, alltasklists){
       if(err){
           console.log(err);
       } else {
           //REREOUTE TO INDEX PAGE AFTER ITERATING THROUGH ALL TASK IN DATABASE
-          res.render("index",{tasklists:allTasklists});
+          res.render("tasklists/index",{tasklists:alltasklists});
       }
     });
 });
 
 //CREATE - ADD NEW USER INPUT TO DATABASE
-app.post("/index", function(req, res){
+app.post("/tasklists", function(req, res){
     // RETRIEVE DATA FROM USER INPUT IN NEW PAGE AND CREATE AN ARRAY TO PREPARE FOR DATABASE ENTRY
     var name = req.body.name;
     var desc = req.body.description;
@@ -56,28 +57,66 @@ app.post("/index", function(req, res){
             console.log(err);
         } else {
             //REREOUTES TO THE INDEX PAGE
-            res.redirect("/index");
+            res.redirect("/tasklists");
         }
     });
 });
 
 //NEW PAGE - DISPLAY HTML
-app.get("/index/new", function(req, res){
-   res.render("new"); 
+app.get("/tasklists/new", function(req, res){
+   res.render("tasklists/new"); 
 });   
 
 // SHOW PAGE - DISPLAYS DESCRIPTION FROM DATABASE IN NEW PAGE
-app.get("/index/:id", function(req, res){
+app.get("/tasklists/:id", function(req, res){
     //FINDS THE TASK IN DATABASE WITH A PROVIDED ID
     Tasklists.findById(req.params.id).populate("comments").exec(function(err, foundTask){
         if(err){
             console.log(err);
         } else {
             //REROUTES BAKE TO SHOW PAGE AFTER ITERATING THROUGH THE DATABASE/ARRY FOR THE TASK USING ID
-            res.render("show", {tasklists: foundTask});
+            res.render("tasklists/show", {tasklists: foundTask});
         }
     });
 })
+
+// ====================
+// COMMENTS ROUTES
+// ====================
+
+app.get("/tasklists/:id/comments/new", function(req, res){
+    // find tasklists by id
+    Tasklists.findById(req.params.id, function(err, alltasklists){
+        if(err){
+            console.log(err);
+        } else {
+             res.render("comments/new", {tasklists: alltasklists});
+        }
+    })
+});
+
+app.post("/tasklists/:id/comments", function(req, res){
+   //lookup tasklists using ID
+   Tasklists.findById(req.params.id, function(err, tasklists){
+       if(err){
+           console.log(err);
+           res.redirect("/tasklists");
+       } else {
+        Comment.create(req.body.comment, function(err, comment){
+           if(err){
+               console.log(err);
+           } else {
+               tasklists.comments.push(comment);
+               tasklists.save();
+               res.redirect('/tasklists/' + tasklists._id);
+           }
+        });
+       }
+   });
+   //create new comment
+   //connect new comment to tasklists
+   //redirect tasklists show page
+});
 
 
     //RUN THE SERVER

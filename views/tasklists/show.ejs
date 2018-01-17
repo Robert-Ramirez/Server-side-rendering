@@ -1,15 +1,18 @@
-<% include partials/header %>
-
+<% include ../partials/header %>
 <!--RETRIEVE THE TASK NAME FROM THE DATABASE IMPORTANT TO WRITE NAME CORRECTLY-->
 <h1><%= tasklists.name %></h1>
 
+
 <!--RETRIEVE THE TASK DESCRIPTION FROM THE DATABASE IMPORTANT TO WRITE NAME CORRECTLY-->
 <p><%= tasklists.description %></p>
+
+<p>
+    <a class="btn btn-success" href="/tasklists/<%= tasklists._id %>/comments/new">Add New Comment</a>
+</p>
 
 <% tasklists.comments.forEach(function(comment){ %>
     <p>
         <strong><%= comment.author %></strong> - <%= comment.text %>
     </p>
 <% }) %>
-
-<% include partials/footer %>
+<% include ../partials/footer %>
