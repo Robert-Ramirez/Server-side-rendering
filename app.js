@@ -68,7 +68,7 @@ app.get("/tasklists", function(req, res){
 });
 
 //CREATE - ADD NEW USER INPUT TO DATABASE
-app.post("/tasklists", function(req, res){
+app.post("/tasklists", isLoggedIn, function(req, res){
     // RETRIEVE DATA FROM USER INPUT IN NEW PAGE AND CREATE AN ARRAY TO PREPARE FOR DATABASE ENTRY
     var name = req.body.name;
     var desc = req.body.description;
@@ -85,7 +85,7 @@ app.post("/tasklists", function(req, res){
 });
 
 //NEW PAGE - DISPLAY HTML
-app.get("/tasklists/new", function(req, res){
+app.get("/tasklists/new", isLoggedIn, function(req, res){
    res.render("tasklists/new"); 
 });   
 
