@@ -5,7 +5,7 @@ var Comment = require("../models/comments");
 var middleware = require("../middleware");
 
 //Comments New
-router.get("/new",middleware.isLoggedIn, function(req, res){
+router.get("/new", middleware.isLoggedIn, function(req, res){
     // find tasklists by id
     console.log(req.params.id);
     tasklists.findById(req.params.id, function(err, tasklists){
@@ -27,7 +27,6 @@ router.post("/",middleware.isLoggedIn,function(req, res){
        } else {
         Comment.create(req.body.comment, function(err, comment){
            if(err){
-               req.flash("error", "Something went wrong");
                console.log(err);
            } else {
                //add username and id to comment
@@ -38,7 +37,7 @@ router.post("/",middleware.isLoggedIn,function(req, res){
                tasklists.comments.push(comment);
                tasklists.save();
                console.log(comment);
-               req.flash("success", "Successfully added comment");
+               req.flash('success', 'Created a comment!');
                res.redirect('/tasklists/' + tasklists._id);
            }
         });
@@ -46,39 +45,35 @@ router.post("/",middleware.isLoggedIn,function(req, res){
    });
 });
 
-// COMMENT EDIT ROUTE
-router.get("/:comment_id/edit", middleware.checkCommentOwnership, function(req, res){
-   Comment.findById(req.params.comment_id, function(err, foundComment){
-      if(err){
-          res.redirect("back");
-      } else {
-        res.render("comments/edit", {tasklists_id: req.params.id, comment: foundComment});
-      }
-   });
+router.get("/:commentId/edit", middleware.isLoggedIn, function(req, res){
+    // find tasklists by id
+    Comment.findById(req.params.commentId, function(err, comment){
+        if(err){
+            console.log(err);
+        } else {
+             res.render("comments/edit", {tasklists_id: req.params.id, comment: comment});
+        }
+    })
 });
 
-// COMMENT UPDATE
-router.put("/:comment_id", middleware.checkCommentOwnership, function(req, res){
-   Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment, function(err, updatedComment){
-      if(err){
-          res.redirect("back");
-      } else {
-          res.redirect("/tasklists/" + req.params.id );
-      }
-   });
-});
-
-// COMMENT DESTROY ROUTE
-router.delete("/:comment_id", middleware.checkCommentOwnership, function(req, res){
-    //findByIdAndRemove
-    Comment.findByIdAndRemove(req.params.comment_id, function(err){
+router.put("/:commentId", function(req, res){
+   Comment.findByIdAndUpdate(req.params.commentId, req.body.comment, function(err, comment){
        if(err){
-           res.redirect("back");
+           res.render("edit");
        } else {
-           req.flash("success", "Comment deleted");
            res.redirect("/tasklists/" + req.params.id);
        }
-    });
+   }); 
+});
+
+router.delete("/:commentId",middleware.checkUserComment, function(req, res){
+    Comment.findByIdAndRemove(req.params.commentId, function(err){
+        if(err){
+            console.log("PROBLEM!");
+        } else {
+            res.redirect("/tasklists/" + req.params.id);
+        }
+    })
 });
 
 module.exports = router;

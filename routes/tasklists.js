@@ -2,7 +2,7 @@ var express = require("express");
 var router  = express.Router();
 var tasklists = require("../models/tasklists");
 var middleware = require("../middleware");
-
+var request = require("request");
 
 //INDEX - show all tasklists
 router.get("/", function(req, res){
@@ -11,7 +11,13 @@ router.get("/", function(req, res){
        if(err){
            console.log(err);
        } else {
-          res.render("tasklists/index",{tasklists:alltasklists});
+           request('https://maps.googleapis.com/maps/api/geocode/json?address=sardine%20lake%20ca&key=AIzaSyBtHyZ049G_pjzIXDKsJJB5zMohfN67llM', function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                console.log(body); // Show the HTML for the Modulus homepage.
+                res.render("tasklists/index",{tasklists:alltasklists});
+
+            }
+});
        }
     });
 });
@@ -58,37 +64,41 @@ router.get("/:id", function(req, res){
     });
 });
 
-// EDIT tasklists ROUTE
-router.get("/:id/edit", middleware.checkTasklistsOwnership, function(req, res){
+router.get("/:id/edit", middleware.checkUsertasklists, function(req, res){
+    console.log("IN EDIT!");
+    //find the tasklists with provided ID
     tasklists.findById(req.params.id, function(err, foundtasklists){
-        res.render("tasklists/edit", {tasklists: foundtasklists});
+        if(err){
+            console.log(err);
+        } else {
+            //render show template with that tasklists
+            res.render("tasklists/edit", {tasklists: foundtasklists});
+        }
     });
 });
 
-// UPDATE tasklists ROUTE
-router.put("/:id",middleware.checkTasklistsOwnership, function(req, res){
-    // find and update the correct tasklists
-    tasklists.findByIdAndUpdate(req.params.id, req.body.tasklists, function(err, updatedtasklists){
-       if(err){
-           res.redirect("/tasklists");
-       } else {
-           //redirect somewhere(show page)
-           res.redirect("/tasklists/" + req.params.id);
-       }
+router.put("/:id", function(req, res){
+    var newData = {name: req.body.name, image: req.body.image, description: req.body.desc};
+    tasklists.findByIdAndUpdate(req.params.id, {$set: newData}, function(err, tasklists){
+        if(err){
+            req.flash("error", err.message);
+            res.redirect("back");
+        } else {
+            req.flash("success","Successfully Updated!");
+            res.redirect("/tasklists/" + tasklists._id);
+        }
     });
 });
 
-// DESTROY tasklists ROUTE
-router.delete("/:id",middleware.checkTasklistsOwnership, function(req, res){
-   tasklists.findByIdAndRemove(req.params.id, function(err){
-      if(err){
-          res.redirect("/tasklists");
-      } else {
-          res.redirect("/tasklists");
-      }
-   });
-});
 
+//middleware
+// function isLoggedIn(req, res, next){
+//     if(req.isAuthenticated()){
+//         return next();
+//     }
+//     req.flash("error", "You must be signed in to do that!");
+//     res.redirect("/login");
+// }
 
 module.exports = router;
 
