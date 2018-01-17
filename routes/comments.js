@@ -15,9 +15,10 @@ router.get("/new", isLoggedIn, function(req, res){
     })
 });
 
-router.post("/", isLoggedIn, function(req, res){
-   //lookup tasklists using ID
-   Tasklists.findById(req.params.id, function(err, tasklists){
+//Comments Create
+router.post("/",isLoggedIn,function(req, res){
+   //lookup campground using ID
+   Tasklists.findById(req.params.id, function(err, alltasklists){
        if(err){
            console.log(err);
            res.redirect("/tasklists");
@@ -26,16 +27,19 @@ router.post("/", isLoggedIn, function(req, res){
            if(err){
                console.log(err);
            } else {
-               tasklists.comments.push(comment);
-               tasklists.save();
-               res.redirect('/tasklists/' + tasklists._id);
+               //add username and id to comment
+               comment.author.id = req.user._id;
+               comment.author.username = req.user.username;
+               //save comment
+               comment.save();
+               alltasklists.comments.push(comment);
+               alltasklists.save();
+               console.log(comment);
+               res.redirect('/tasklists/' + alltasklists._id);
            }
         });
        }
    });
-   //create new comment
-   //connect new comment to tasklists
-   //redirect tasklists show page
 });
 
 //middleware
