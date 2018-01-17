@@ -4,14 +4,20 @@ var mongoose = require("mongoose");
 var tasklistSchema = new mongoose.Schema({
    name: String,
    description: String,
-   comments: 
-       [
-          {
-             type: mongoose.Schema.Types.ObjectId,
-             ref: "Comment"
-          }
-       ]
-    });
+   author: {
+      id: {
+         type: mongoose.Schema.Types.ObjectId,
+         ref: "User"
+      },
+      username: String
+   },
+   comments: [
+      {
+         type: mongoose.Schema.Types.ObjectId,
+         ref: "Comment"
+      }
+   ]
+});
 
 module.exports = mongoose.model("tasklists", tasklistSchema);
 

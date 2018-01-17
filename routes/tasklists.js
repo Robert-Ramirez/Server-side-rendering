@@ -21,7 +21,11 @@ router.post("/", isLoggedIn, function(req, res){
     // RETRIEVE DATA FROM USER INPUT IN NEW PAGE AND CREATE AN ARRAY TO PREPARE FOR DATABASE ENTRY
     var name = req.body.name;
     var desc = req.body.description;
-    var newTasklist = {name: name, description: desc}
+    var author = {
+                    id: req.user._id,
+                    username: req.user.username
+                 }
+    var newTasklist = {name: name, description: desc, author:author}
     // CREATES A NEW TASK LIST ENTRY AND SAVES TO THE DATABASE
     Tasklists.create(newTasklist, function(err, newlyCreated){
         if(err){
