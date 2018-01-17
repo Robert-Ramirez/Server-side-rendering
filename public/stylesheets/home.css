@@ -1,5 +1,5 @@
     body {
-    background: url(https://cdn.pixabay.com/photo/2015/02/05/08/12/stock-624712_960_720.jpg);
+    background: url("../img/header.jpg");
     background-size: cover;
     background-position: center; 
     transition: background 1.5s linear;
