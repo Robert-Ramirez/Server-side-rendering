@@ -2,7 +2,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-3">
-            <p class="lead">Task Manager</p>
+            <p class="lead">Task</p>
             <div class="list-group">
                 <li class="list-group-item active">Info 1</li>
                 <li class="list-group-item">Info 2</li>
@@ -11,14 +11,20 @@
         </div>
         <div class="col-md-9">
             <div class="thumbnail">
-
+                <!--<img class="img-responsive" src="">-->
                 <div class="caption-full">
                     <h4 class="pull-right">Task</h4>
-                    <h4><a><%= tasklists.name %></a></h4>
+                    <h4><a><%=tasklists.name%></a></h4>
                     <p><%= tasklists.description %></p>
                     <p>
-                        <em>Submitted by <%= tasklists.author.username %></em>
+                        <em>Submitted By <%= tasklists.author.username %></em>
                     </p>
+                    <% if(currentUser && tasklists.author.id.equals(currentUser._id)){ %>
+                        <a class="btn btn-xs btn-warning" href="/tasklists/<%= tasklists._id %>/edit">Edit</a>
+                        <form id="delete-form" action="/tasklists/<%= tasklists._id %>?_method=DELETE" method="POST">
+                            <button class="btn btn-xs btn-danger">Delete</button>
+                        </form>
+                    <% }%>
                 </div>
             </div>
             <div class="well">
@@ -34,6 +40,13 @@
                             <p>
                                 <%= comment.text %> 
                             </p>
+                        <% if(currentUser && comment.author.id.equals(currentUser._id)){ %>
+                            <a class="btn btn-xs btn-warning" 
+                               href="/tasklists/<%=tasklists._id %>/comments/<%=comment._id %>/edit">Edit</a>
+                            <form id="delete-form" action="/tasklists/<%=tasklists._id %>/comments/<%=comment._id %>?_method=DELETE" method="POST">
+                                <input type="submit" class="btn btn-xs btn-danger" value="Delete">
+                            </form>
+                        <% } %>
                         </div>
                     </div>
                 <% }) %>

@@ -1,67 +1,94 @@
 var express = require("express");
 var router  = express.Router();
-var Tasklists = require("../models/tasklists");
+var tasklists = require("../models/tasklists");
+var middleware = require("../middleware");
 
-//INDEX PAGE - SHOWS ALL TASKLIST
+
+//INDEX - show all tasklists
 router.get("/", function(req, res){
-    // RETRIEVE TASK FROM DATABASE
-    //FUNCTION IS FOR ITERATING THROUGH ALL TASK IN DATABASE
-    Tasklists.find({}, function(err, alltasklists){
-      if(err){
-          console.log(err);
-      } else {
-          //REREOUTE TO INDEX PAGE AFTER ITERATING THROUGH ALL TASK IN DATABASE
+    // Get all tasklists from DB
+    tasklists.find({}, function(err, alltasklists){
+       if(err){
+           console.log(err);
+       } else {
           res.render("tasklists/index",{tasklists:alltasklists});
-      }
+       }
     });
 });
 
-//CREATE - ADD NEW USER INPUT TO DATABASE
-router.post("/", isLoggedIn, function(req, res){
-    // RETRIEVE DATA FROM USER INPUT IN NEW PAGE AND CREATE AN ARRAY TO PREPARE FOR DATABASE ENTRY
+//CREATE - add new tasklists to DB
+router.post("/", middleware.isLoggedIn, function(req, res){
+    // get data from form and add to tasklists array
     var name = req.body.name;
+    var image = req.body.image;
     var desc = req.body.description;
     var author = {
-                    id: req.user._id,
-                    username: req.user.username
-                 }
-    var newTasklist = {name: name, description: desc, author:author}
-    // CREATES A NEW TASK LIST ENTRY AND SAVES TO THE DATABASE
-    Tasklists.create(newTasklist, function(err, newlyCreated){
+        id: req.user._id,
+        username: req.user.username
+    }
+    var newtasklists = {name: name, image: image, description: desc, author:author}
+    // Create a new tasklists and save to DB
+    tasklists.create(newtasklists, function(err, newlyCreated){
         if(err){
             console.log(err);
         } else {
-            //REREOUTES TO THE INDEX PAGE
+            //redirect back to tasklists page
+            console.log(newlyCreated);
             res.redirect("/tasklists");
         }
     });
 });
 
-//NEW PAGE - show form to create new tasklists
-router.get("/new", isLoggedIn, function(req, res){
-  res.render("tasklists/new"); 
-}); 
+//NEW - show form to create new tasklists
+router.get("/new", middleware.isLoggedIn, function(req, res){
+   res.render("tasklists/new"); 
+});
 
-// SHOW PAGE - DISPLAYS DESCRIPTION FROM DATABASE IN NEW PAGE
+// SHOW - shows more info about one tasklists
 router.get("/:id", function(req, res){
-    //FINDS THE TASK IN DATABASE WITH A PROVIDED ID
-    Tasklists.findById(req.params.id).populate("comments").exec(function(err, foundTask){
+    //find the tasklists with provided ID
+    tasklists.findById(req.params.id).populate("comments").exec(function(err, foundtasklists){
         if(err){
             console.log(err);
         } else {
-            //REROUTES BAKE TO SHOW PAGE AFTER ITERATING THROUGH THE DATABASE/ARRY FOR THE TASK USING ID
-            res.render("tasklists/show", {tasklists: foundTask});
+            console.log(foundtasklists)
+            //render show template with that tasklists
+            res.render("tasklists/show", {tasklists: foundtasklists});
         }
     });
-})
+});
 
-//middleware
-function isLoggedIn(req, res, next){
-    if(req.isAuthenticated()){
-        return next();
-    }
-    res.redirect("/login");
-}
+// EDIT tasklists ROUTE
+router.get("/:id/edit", middleware.checkTasklistsOwnership, function(req, res){
+    tasklists.findById(req.params.id, function(err, foundtasklists){
+        res.render("tasklists/edit", {tasklists: foundtasklists});
+    });
+});
+
+// UPDATE tasklists ROUTE
+router.put("/:id",middleware.checkTasklistsOwnership, function(req, res){
+    // find and update the correct tasklists
+    tasklists.findByIdAndUpdate(req.params.id, req.body.tasklists, function(err, updatedtasklists){
+       if(err){
+           res.redirect("/tasklists");
+       } else {
+           //redirect somewhere(show page)
+           res.redirect("/tasklists/" + req.params.id);
+       }
+    });
+});
+
+// DESTROY tasklists ROUTE
+router.delete("/:id",middleware.checkTasklistsOwnership, function(req, res){
+   tasklists.findByIdAndRemove(req.params.id, function(err){
+      if(err){
+          res.redirect("/tasklists");
+      } else {
+          res.redirect("/tasklists");
+      }
+   });
+});
+
 
 module.exports = router;
 
