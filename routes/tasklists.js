@@ -26,13 +26,12 @@ router.get("/", function(req, res){
 router.post("/", middleware.isLoggedIn, function(req, res){
     // get data from form and add to tasklists array
     var name = req.body.name;
-    var image = req.body.image;
     var desc = req.body.description;
     var author = {
         id: req.user._id,
         username: req.user.username
     }
-    var newtasklists = {name: name, image: image, description: desc, author:author}
+    var newtasklists = {name: name, description: desc, author:author}
     // Create a new tasklists and save to DB
     tasklists.create(newtasklists, function(err, newlyCreated){
         if(err){
@@ -78,7 +77,7 @@ router.get("/:id/edit", middleware.checkUsertasklists, function(req, res){
 });
 
 router.put("/:id", function(req, res){
-    var newData = {name: req.body.name, image: req.body.image, description: req.body.desc};
+    var newData = {name: req.body.name, description: req.body.desc};
     tasklists.findByIdAndUpdate(req.params.id, {$set: newData}, function(err, tasklists){
         if(err){
             req.flash("error", err.message);
