@@ -1,5 +1,7 @@
 #Task Manager
+Project: Learn server-side rendering by creating a website that manages task
 
+Steps Completed:
 ##Initial Setup
 * Add Home Page
 * Add Tasklists Page that lists all tasklists
@@ -106,13 +108,10 @@ Each Tasklist has:
 ##Upload to github
 * Create online repository
 
-TODOS
+## Pending
 * Responsive CSS
 
-
-
-
-RESTFUL ROUTES
+##RESTFUL ROUTES (Additional information on routers)
 
 name        url                             verb    desc.
 ===================================================================================================
