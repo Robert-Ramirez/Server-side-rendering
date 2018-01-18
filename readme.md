@@ -2,23 +2,23 @@
 
 ##Initial Setup
 * Add Home Page
-* Add tasklists Page that lists all tasklists
+* Add Tasklists Page that lists all tasklists
 
-Each tasklist has:
+Each Tasklist has:
    * Name
-   * Image
+   * Description
 
 ##Layout and Basic Styling
 * Create our header and footer partials
 * Add in Bootstrap
 
-##Creating New tasklists
+##Creating New Tasklist
 * Setup new tasklist POST route
 * Add in body-parser
 * Setup route to show form
 * Add basic unstyled form
 
-##Style the tasklists page
+##Style the Tasklist's page
 * Add a better header/title
 * Make tasklists display in a grid
 
@@ -91,56 +91,34 @@ Each tasklist has:
 * Associate users and comments
 * Save author's name to a comment automatically
 
-##Users + tasklists
+##Users + Tasklists
 * Prevent an unauthenticated user from creating a tasklist
 * Save username+id to newly created tasklist
 
-#Upload on github
-* git remote add origin https://github.com/Robert-Ramirez/taskmanager.git
-* git push -u origin master
+##Setup Online Server
+* Connect to online server
+* Link: https://dashboard.heroku.com/apps/ancient-fjord-90562
 
-#Upload on heroku server
-* https://dashboard.heroku.com/apps/ancient-fjord-90562
+#Setup Online Database
+* Connect to online database
+* Link: https://mlab.com/
+
+##Upload to github
+* Create online repository
 
 TODOS
-* Add "back" redirect to login
-* Add method-override
-* BOOTSTRAP NAV COLLPASE JS
-* Flash Messages
-* Refactor container div to header
-* Show/hide delete and update buttons
-* style login/register forms
-* Random Background Home Page
-* Refactor middleware
-* change styling in show template - comment delete/update
-* UPATE/DELETE tasklist
-
-* BOOTSTRAP NAV COLLPASE JS
-* Flash Messages
-* Refactor container div to header
-* Show/hide delete and update buttons
-* style login/register forms
-* Random Background Home Page
-* Refactor middleware
-* change styling in show template - comment delete/update
-* UPDATE/DELETE tasklist
+* Responsive CSS
 
 
 
 
 RESTFUL ROUTES
 
-name      url      verb    desc.
-===============================================
-INDEX   /dogs      GET   Display a list of all dogs
-NEW     /dogs/new  GET   Displays form to make a new dog
-CREATE  /dogs      POST  Add new dog to DB
-SHOW    /dogs/:id  GET   Shows info about one dog
-
-INDEX   /tasklists
-NEW     /tasklists/new
-CREATE  /tasklists
-SHOW    /tasklists/:id
-
-NEW     tasklists/:id/comments/new    GET
-CREATE  tasklists/:id/comments      POST
+name        url                             verb    desc.
+=========================================================================================
+INDEX       /tasklists                      GET   Display a list of all tasklists
+NEW         /tasklists/new                  GET   Displays form to make a new tasklist
+CREATE      /tasklists                      POST  Add new tasklist to DB
+SHOW        /tasklists/:id                  GET   Shows info about one tasklist
+NEW         tasklists/:id/comments/new      GET   Displays form to make a new comment
+CREATE      tasklists/:id/comments          POST  Add new comment to DB
