@@ -8,8 +8,8 @@ var express     = require("express"),
     methodOverride = require("method-override"),
     Tasklists   = require("./models/tasklists"),
     Comment     = require("./models/comments"),
-    User        = require("./models/user"),
-    seedDB      = require("./seeds");
+    User        = require("./models/user")
+
 
 //requring routes
 var commentRoutes    = require("./routes/comments"),
