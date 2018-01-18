@@ -95,6 +95,12 @@ Each tasklist has:
 * Prevent an unauthenticated user from creating a tasklist
 * Save username+id to newly created tasklist
 
+#Upload on github
+* git remote add origin https://github.com/Robert-Ramirez/taskmanager.git
+* git push -u origin master
+
+#Upload on heroku server
+* https://dashboard.heroku.com/apps/ancient-fjord-90562
 
 TODOS
 * Add "back" redirect to login
