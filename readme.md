@@ -114,11 +114,11 @@ Each Tasklist has:
 
 ##RESTFUL ROUTES (Additional information on routers)
 
-name        url                             verb    desc.
-===================================================================================================
-INDEX       /tasklists                      GET   Display a list of all tasklists
-NEW         /tasklists/new                  GET   Displays form to make a new tasklist
-CREATE      /tasklists                      POST  Add new tasklist to DB
-SHOW        /tasklists/:id                  GET   Shows info about one tasklist
-NEW         tasklists/:id/comments/new      GET   Displays form to make a new comment
-CREATE      tasklists/:id/comments          POST  Add new comment to DB
+## name        url                             verb    desc.
+#===================================================================================================#
+*  INDEX       /tasklists                      GET   Display a list of all tasklists
+*  NEW         /tasklists/new                  GET   Displays form to make a new tasklist
+*  CREATE      /tasklists                      POST  Add new tasklist to DB
+*  SHOW        /tasklists/:id                  GET   Shows info about one tasklist
+*  NEW         tasklists/:id/comments/new      GET   Displays form to make a new comment
+*  CREATE      tasklists/:id/comments          POST  Add new comment to DB
