@@ -1,5 +1,6 @@
 #Task Manager
-Project: Learn server-side rendering by creating a website that manages task
+
+* Description: Learn server-side rendering by creating a website that manages task
 
 Steps Completed:
 ##Initial Setup
