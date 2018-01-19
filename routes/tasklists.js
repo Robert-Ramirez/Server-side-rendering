@@ -83,14 +83,15 @@ router.put("/:id", function(req, res){
     });
 });
 
-
-//middleware
-// function isLoggedIn(req, res, next){
-//     if(req.isAuthenticated()){
-//         return next();
-//     }
-//     req.flash("error", "You must be signed in to do that!");
-//     res.redirect("/login");
-// }
+// DESTROY TASKLIST ROUTE
+router.delete("/:id",middleware.checkUsertasklists, function(req, res){
+   tasklists.findByIdAndRemove(req.params.id, function(err){
+      if(err){
+          res.redirect("/tasklists");
+      } else {
+          res.redirect("/tasklists");
+      }
+   });
+});
 
 module.exports = router;
