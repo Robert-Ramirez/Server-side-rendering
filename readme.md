@@ -1,6 +1,6 @@
-#Task Manager
+#Server-side rendering
 
-* Description: Learn server-side rendering by creating a website that manages task
+* Description: Created a website that manages task
 
 Steps Completed:
 ##Initial Setup
